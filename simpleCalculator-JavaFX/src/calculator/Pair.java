@@ -1,5 +1,9 @@
 package calculator;
 
+/**
+ * A generic immutable pair class.
+ * @param <E> as the element pair type
+ */
 public class Pair<E> {
     private E first;
     private E second;

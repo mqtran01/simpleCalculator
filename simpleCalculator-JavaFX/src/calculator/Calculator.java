@@ -5,12 +5,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
+public class Calculator extends Application {
 
-public class Main extends Application {
+    private static final int btnSize = 50;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -27,15 +28,12 @@ public class Main extends Application {
 
 
         GridPane root = new GridPane();
-//        root.setAlignment(Pos.CENTER);
-        root.setHgap(10);
-        root.setVgap(10);
-        Scene normalCalc = new Scene(root,800,800);
+        root.setHgap(1);
+        root.setVgap(1);
 
         GridPane secondPage = new GridPane();
         secondPage.setHgap(10);
         secondPage.setVgap(10);
-        Scene helpPage = new Scene(secondPage, 800,800);
 
         Tab tab1 = new Tab("Calculator", root);
         Tab tab2 = new Tab("Help", secondPage);
@@ -43,47 +41,16 @@ public class Main extends Application {
         tab2.setClosable(false);
         window.getTabs().addAll(tab1, tab2);
 
-        Label lbl = new Label("Hello");
-        Button ext = new Button("Bye");
-        ext.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.exit(0);
-            }
-        });
-        Button toPg2Btn = new Button("Page 2");
-        GridPane.setConstraints(toPg2Btn, 0, 10);
-        toPg2Btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-//                primaryStage.setScene(helpPage);
-//                primaryStage.show();
-                window.getSelectionModel().select(tab2);
-
-                System.out.println("Changed to page 2");
-            }
-        });
         TextField txtfld = new TextField();
-        GridPane.setConstraints(txtfld,0,0);
+        GridPane.setConstraints(txtfld,0,0,5,1);
+        txtfld.setEditable(false);
+        txtfld.setMouseTransparent(true);
+        txtfld.setFocusTraversable(false);
 
-
-        Button toPg1Btn = new Button("Page 1");
-        GridPane.setConstraints(toPg1Btn, 0, 11);
-        toPg1Btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-//                primaryStage.setScene(normalCalc);
-//                primaryStage.show();
-                window.getSelectionModel().select(tab1);
-                System.out.println("Changed to page 1");
-            }
-        });
 
 
 
         Button btn;
-        int j = 0;
-        ArrayList<Button> keys = new ArrayList<Button>();
         for (int i = 0; i < 10; i++) {
             btn = new Button(Integer.toString(i));
             btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -98,6 +65,7 @@ public class Main extends Application {
 
             Pair<Integer> pair = setLocation(i);
             GridPane.setConstraints(btn, pair.getFirst(), pair.getSecond());
+            btn.setPrefSize(btnSize,btnSize);
         }
 
         Button plus = new Button("+");
@@ -114,7 +82,9 @@ public class Main extends Application {
                 }
             }
         });
-        GridPane.setConstraints(plus, 10, 10);
+        GridPane.setConstraints(plus, 3, 4);
+        plus.setPrefSize(btnSize,btnSize);
+
 
         Button minus = new Button("-");
         minus.setOnAction(new EventHandler<ActionEvent>() {
@@ -130,7 +100,9 @@ public class Main extends Application {
                 }
             }
         });
-        GridPane.setConstraints(minus, 11, 10);
+        GridPane.setConstraints(minus, 3, 3);
+        minus.setPrefSize(btnSize,btnSize);
+
 
         Button times = new Button("*");
         times.setOnAction(new EventHandler<ActionEvent>() {
@@ -146,7 +118,9 @@ public class Main extends Application {
                 }
             }
         });
-        GridPane.setConstraints(times, 12, 10);
+        GridPane.setConstraints(times, 3, 2);
+        times.setPrefSize(btnSize,btnSize);
+
 
         Button divide = new Button("/");
         divide.setOnAction(new EventHandler<ActionEvent>() {
@@ -162,7 +136,9 @@ public class Main extends Application {
                 }
             }
         });
-        GridPane.setConstraints(divide, 13, 10);
+        GridPane.setConstraints(divide, 3, 1);
+        divide.setPrefSize(btnSize,btnSize);
+
 
         Button equals = new Button("=");
         equals.setOnAction(new EventHandler<ActionEvent>() {
@@ -171,16 +147,53 @@ public class Main extends Application {
                 txtfld.setText(eval.evaluate(txtfld.getText()));
             }
         });
-        GridPane.setConstraints(equals, 11, 11);
+        GridPane.setConstraints(equals, 2, 4);
+        equals.setPrefSize(btnSize,btnSize);
+
+        Button dot = new Button(".");
+        dot.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String txt = txtfld.getText();
+                if (txt.length() > 0) {
+
+                    if (!Character.isDigit(txt.charAt(txt.length()-1))) {
+                        txtfld.setText(txt.substring(0, txt.length()-1) + ".");
+                    } else {
+                        txtfld.setText(txt + ".");
+                    }
+                }
+            }
+        });
+        GridPane.setConstraints(dot, 1, 4);
+        dot.setPrefSize(btnSize,btnSize);
 
 
-        root.getChildren().addAll(lbl, ext, toPg2Btn, txtfld, plus, equals, minus, times, divide);
-        secondPage.getChildren().add(toPg1Btn);
-//        primaryStage.setScene(normalCalc);
-//        primaryStage.show();
 
+        root.getChildren().addAll(txtfld, plus, equals, minus, times, divide, dot);
 
         Scene overarch = new Scene(window);
+        overarch.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getText().length() == 0)
+                    return;
+                char key = event.getText().charAt(0);
+                if (Character.isDigit(key)) {
+                    txtfld.setText(txtfld.getText() + key);
+                } else if (key == '.' && txtfld.getLength() != 0) {
+                    String txt = txtfld.getText();
+                    if (!Character.isDigit(txt.charAt(txt.length()-1))) {
+                        txtfld.setText(txt.substring(0, txt.length()-1) + ".");
+                    } else {
+                        txtfld.setText(txt + ".");
+                    }
+                } else { // operator
+
+                }
+
+            }
+        });
         primaryStage.setScene(overarch);
         primaryStage.show();
     }
@@ -231,7 +244,7 @@ public class Main extends Application {
                 break;
 
         }
-        return new Pair<Integer>(x, y);
+        return new Pair<>(x, y);
     }
 
     private boolean isLastCharOp(String s) {
