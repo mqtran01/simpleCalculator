@@ -10,8 +10,6 @@ public class Evaluator {
 
     private static final char[] OPERATORS = {'+', '-', '*', '/'};
     private static final ArrayList<Character> ops;
-    private LinkedList<String> numbers;
-//    private Stack<String> operators;
     private static final HashMap<String, Integer> PRECEDENCE;
     static {
         PRECEDENCE = new HashMap<>();
@@ -20,19 +18,13 @@ public class Evaluator {
         PRECEDENCE.put("*", 1);
         PRECEDENCE.put("/", 1);
 
+
         ops = new ArrayList<>();
         ops.add('+');
         ops.add('-');
         ops.add('*');
         ops.add('/');
-    }
 
-
-
-    public Evaluator() {
-//        numbers = new LinkedList<>();
-//        operators = new Stack<>();
-//        output = new LinkedList<>();
     }
 
     /**
@@ -89,6 +81,7 @@ public class Evaluator {
                     b = numbers.pop();
                 } catch (Exception e) {
                     // Some kind of error
+                    // Should never happen
                     return "Non-matching arithmetic";
                 }
                 try {
@@ -103,27 +96,15 @@ public class Evaluator {
             }
         }
 
-        // Should only have 1 number
-        /*
-        System.out.println(numbers.size());
-        if (numbers.size() != 1) {
-            return "Non-matching arithmetic2";
-        } else {
-            return numbers.pop();
-        }
-        */
         return numbers.pop();
-
-
     }
 
-//    public boolean isOperator(char c) {
-//        return PRECEDENCE.containsKey(c);
-//    }
-
     public static boolean isOperator(String s) {
-//        char c = s.charAt(0);
         return PRECEDENCE.containsKey(s);
+    }
+
+    public static boolean isOperator(char c) {
+        return ops.contains(c);
     }
 
     private static String operate(String op, String a, String b) throws NumberFormatException {

@@ -256,6 +256,23 @@ public class Calculator extends Application {
         return false;
     }
 
+    // TODO implement this into the code
+    private String textProtocol(String s, String btn) {
+        // Checks if there is a letter (i.e. error)
+        if (Character.isAlphabetic(btn.charAt(0)))
+            s = "";
+
+        // Regular checks
+        if (Character.isDigit(btn.charAt(0))) {
+            return s + btn;
+        } else {
+            // dot or operator
+            if (s.length() != 0 && !Character.isDigit(s.charAt(s.length()-1)))
+                return s + btn;
+        }
+        return s;
+    }
+
 
     public static void main(String[] args) {
         launch(args);
