@@ -19,8 +19,8 @@
     </fx:define>
     <Tab text="Calculator" closable="false">
         <GridPane hgap="1" vgap="1">
-            <TextField GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="5" GridPane.rowSpan="1"
-            editable="false" mouseTransparent="true" focusTraversable="false"/>
+            <TextField fx:id="textField" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="5"
+                       GridPane.rowSpan="1" editable="false" mouseTransparent="true" focusTraversable="false"/>
             <Button text="0" GridPane.columnIndex="0" GridPane.rowIndex="4" onAction="#keyPress"
                     prefWidth="$btnSize" prefHeight="$btnSize"/>
             <Button text="1" GridPane.columnIndex="0" GridPane.rowIndex="3" onAction="#keyPress"

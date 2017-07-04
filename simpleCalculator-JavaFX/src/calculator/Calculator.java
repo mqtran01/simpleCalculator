@@ -1,13 +1,13 @@
 package calculator;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Calculator extends Application {
@@ -16,12 +16,38 @@ public class Calculator extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        /*
+
         Parent root = FXMLLoader.load(getClass().getResource("CalcPage.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setTitle("Calculator");
+        primaryStage.setScene(new Scene(root, 195, 250));
+        TextField textField = (TextField) root.lookup("#textField");
+        primaryStage.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.BACK_SPACE)
+                    textField.setText(textField.getLength() == 0 ? "" : textField.getText(0, textField.getLength()-1));
+                else if (event.getCode() == KeyCode.ENTER)
+                    textField.setText(Evaluator.evaluate(textField.getText()));
+
+                System.out.println(event.getCode());
+
+                switch (event.getText()) {
+                    case "0": case "1": case "2":
+                    case "3": case "4": case "5":
+                    case "6": case "7": case "8":
+                    case "9": case "+": case "-":
+                    case "*": case "/":case ".":
+                        textField.setText(textProtocol(textField.getText(), event.getText()));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
         primaryStage.show();
-        */
+
+
+        /*
         TabPane window = new TabPane();
         window.setPrefHeight(600);
         window.setPrefWidth(800);
@@ -131,6 +157,7 @@ public class Calculator extends Application {
         });
         primaryStage.setScene(overarch);
         primaryStage.show();
+        */
     }
 
     private static Pair<Integer> setLocation(int i) {
