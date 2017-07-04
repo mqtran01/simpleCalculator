@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -44,16 +45,17 @@ public class Calculator extends Application {
         textField.setEditable(false);
         textField.setMouseTransparent(true);
         textField.setFocusTraversable(false);
+        EventHandler<ActionEvent> press = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                textField.setText(textProtocol(textField.getText(), ((Button) event.getSource()).getText()));
+            }
+        };
 
         Button btn;
         for (int i = 0; i < 10; i++) {
             btn = new Button(Integer.toString(i));
-            btn.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    textField.setText(textProtocol(textField.getText(), ((Button) event.getSource()).getText()));
-                }
-            });
+            btn.setOnAction(press);
             root.getChildren().add(btn);
 
             Pair<Integer> pair = setLocation(i);
@@ -62,45 +64,25 @@ public class Calculator extends Application {
         }
 
         Button plus = new Button("+");
-        plus.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                textField.setText(textProtocol(textField.getText(), ((Button) event.getSource()).getText()));
-            }
-        });
+        plus.setOnAction(press);
         GridPane.setConstraints(plus, 3, 4);
         plus.setPrefSize(btnSize,btnSize);
 
 
         Button minus = new Button("-");
-        minus.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                textField.setText(textProtocol(textField.getText(), ((Button) event.getSource()).getText()));
-            }
-        });
+        minus.setOnAction(press);
         GridPane.setConstraints(minus, 3, 3);
         minus.setPrefSize(btnSize,btnSize);
 
 
         Button times = new Button("*");
-        times.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                textField.setText(textProtocol(textField.getText(), ((Button) event.getSource()).getText()));
-            }
-        });
+        times.setOnAction(press);
         GridPane.setConstraints(times, 3, 2);
         times.setPrefSize(btnSize,btnSize);
 
 
         Button divide = new Button("/");
-        divide.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                textField.setText(textProtocol(textField.getText(), ((Button) event.getSource()).getText()));
-            }
-        });
+        divide.setOnAction(press);
         GridPane.setConstraints(divide, 3, 1);
         divide.setPrefSize(btnSize,btnSize);
 
@@ -116,16 +98,9 @@ public class Calculator extends Application {
         equals.setPrefSize(btnSize,btnSize);
 
         Button dot = new Button(".");
-        dot.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                textField.setText(textProtocol(textField.getText(), ((Button) event.getSource()).getText()));
-            }
-        });
+        dot.setOnAction(press);
         GridPane.setConstraints(dot, 1, 4);
         dot.setPrefSize(btnSize,btnSize);
-
-
 
         root.getChildren().addAll(textField, plus, equals, minus, times, divide, dot);
 
@@ -133,21 +108,23 @@ public class Calculator extends Application {
         overarch.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                // TODO change this to use textProtocol
-                if (event.getText().length() == 0)
-                    return;
-                char key = event.getText().charAt(0);
-                if (Character.isDigit(key)) {
-                    textField.setText(textField.getText() + key);
-                } else if (key == '.' && textField.getLength() != 0) {
-                    String txt = textField.getText();
-                    if (!Character.isDigit(txt.charAt(txt.length()-1))) {
-                        textField.setText(txt.substring(0, txt.length()-1) + ".");
-                    } else {
-                        textField.setText(txt + ".");
-                    }
-                } else { // operator
+                if (event.getCode() == KeyCode.BACK_SPACE)
+                    textField.setText(textField.getLength() == 0 ? "" : textField.getText(0, textField.getLength()-1));
+                else if (event.getCode() == KeyCode.ENTER)
+                    textField.setText(Evaluator.evaluate(textField.getText()));
 
+                System.out.println(event.getCode());
+
+                switch (event.getText()) {
+                    case "0": case "1": case "2":
+                    case "3": case "4": case "5":
+                    case "6": case "7": case "8":
+                    case "9": case "+": case "-":
+                    case "*": case "/":
+                        textField.setText(textProtocol(textField.getText(), event.getText()));
+                        break;
+                    default:
+                        break;
                 }
 
             }
@@ -216,8 +193,11 @@ public class Calculator extends Application {
             return s + btn;
         } else { // dot or operator
             // Check for empty string
-            if (s.length() == 0)
+            if (s.length() == 0) {
+                if (btn.equals("+") || btn.equals("-"))
+                    return btn;
                 return s;
+            }
 
             // Check for previous character
             if (Character.isDigit(s.charAt(s.length()-1)))

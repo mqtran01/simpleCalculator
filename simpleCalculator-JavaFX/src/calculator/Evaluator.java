@@ -31,9 +31,12 @@ public class Evaluator {
         Stack<Character> operators = new Stack<>();
         LinkedList<String> output = new LinkedList<>();
 
+        boolean first = true;
         int start = 0;
         while (line.length() != start) {
             if (PRECEDENCE.containsKey(line.charAt(start))) {
+                if (first)
+                    output.push("0");
                 while (!operators.isEmpty() && PRECEDENCE.get(operators.peek()) >= PRECEDENCE.get(line.charAt(start))) {
                     output.add(String.valueOf(operators.pop()));
                 }
@@ -47,6 +50,7 @@ public class Evaluator {
                 System.out.println("Added1 " + line.substring(start,start + i));
                 start += i;
             }
+            first = false;
             // No brackets in this iteration
         }
 

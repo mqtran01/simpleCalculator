@@ -8,33 +8,57 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
-  <tabs>
-    <Tab text="Untitled Tab 1">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <GridPane layoutY="-1.0" prefHeight="371.0" prefWidth="600.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Button mnemonicParsing="false" text="Button" GridPane.columnIndex="1" />
-                     </children>
-                  </GridPane>
-               </children></AnchorPane>
-      </content>
+<?import javafx.scene.control.TextField?>
+
+
+<?import java.lang.Integer?>
+
+<TabPane fx:controller="calculator.CalcController" xmlns:fx="http://javafx.com/fxml" prefHeight="600" prefWidth="800">
+    <fx:define>
+        <Integer fx:id="btnSize" fx:value="50"/>
+    </fx:define>
+    <Tab text="Calculator" closable="false">
+        <GridPane hgap="1" vgap="1">
+            <TextField GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="5" GridPane.rowSpan="1"
+            editable="false" mouseTransparent="true" focusTraversable="false"/>
+            <Button text="0" GridPane.columnIndex="0" GridPane.rowIndex="4" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+            <Button text="1" GridPane.columnIndex="0" GridPane.rowIndex="3" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+            <Button text="2" GridPane.columnIndex="1" GridPane.rowIndex="3" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+            <Button text="3" GridPane.columnIndex="2" GridPane.rowIndex="3" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+            <Button text="4" GridPane.columnIndex="0" GridPane.rowIndex="2" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+            <Button text="5" GridPane.columnIndex="1" GridPane.rowIndex="2" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+            <Button text="6" GridPane.columnIndex="2" GridPane.rowIndex="2" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+            <Button text="7" GridPane.columnIndex="0" GridPane.rowIndex="1" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+            <Button text="8" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+            <Button text="9" GridPane.columnIndex="2" GridPane.rowIndex="1" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+            <Button text="." GridPane.columnIndex="1" GridPane.rowIndex="4" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+
+            <Button text="+" GridPane.columnIndex="3" GridPane.rowIndex="4" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+            <Button text="-" GridPane.columnIndex="3" GridPane.rowIndex="3" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+            <Button text="*" GridPane.columnIndex="3" GridPane.rowIndex="2" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+            <Button text="/" GridPane.columnIndex="3" GridPane.rowIndex="1" onAction="#keyPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+
+            <Button text="=" GridPane.columnIndex="2" GridPane.rowIndex="4" onAction="#equalsPress"
+                    prefWidth="$btnSize" prefHeight="$btnSize"/>
+        </GridPane>
     </Tab>
-    <Tab text="Untitled Tab 2">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-      </content>
+    <Tab text="Help" closable="false">
+
     </Tab>
-  </tabs>
+
 </TabPane>
