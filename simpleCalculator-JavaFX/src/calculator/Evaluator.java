@@ -1,30 +1,22 @@
 package calculator;
 
-
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Stack;
 
 /**
  * Created by Michael on 27/06/2017.
  */
 public class Evaluator {
 
-    private static final char[] OPERATORS = {'+', '-', '*', '/'};
-    private static final ArrayList<Character> ops;
-    private static final HashMap<String, Integer> PRECEDENCE;
+    private static final HashMap<Character, Integer> PRECEDENCE;
+
     static {
         PRECEDENCE = new HashMap<>();
-        PRECEDENCE.put("+", 0);
-        PRECEDENCE.put("-", 0);
-        PRECEDENCE.put("*", 1);
-        PRECEDENCE.put("/", 1);
-
-
-        ops = new ArrayList<>();
-        ops.add('+');
-        ops.add('-');
-        ops.add('*');
-        ops.add('/');
-
+        PRECEDENCE.put('+', 0);
+        PRECEDENCE.put('-', 0);
+        PRECEDENCE.put('*', 1);
+        PRECEDENCE.put('/', 1);
     }
 
     /**
@@ -35,35 +27,34 @@ public class Evaluator {
     public static String evaluate(String line) {
         if (line.length() == 0)
             return "";
-        Stack<String> operators = new Stack<>();
+
+        Stack<Character> operators = new Stack<>();
         LinkedList<String> output = new LinkedList<>();
-//        String read;
 
         int start = 0;
         while (line.length() != start) {
-            if (ops.contains(line.charAt(start))) {
-                while (!operators.isEmpty() && PRECEDENCE.get(operators.peek()) >= PRECEDENCE.get(line.substring(start,start + 1))) {
+            if (PRECEDENCE.containsKey(line.charAt(start))) {
+                while (!operators.isEmpty() && PRECEDENCE.get(operators.peek()) >= PRECEDENCE.get(line.charAt(start))) {
                     output.add(String.valueOf(operators.pop()));
                 }
-                operators.push(line.substring(start,start+1));
+                operators.push(line.charAt(start));
                 start++;
             } else {
                 int i = 0;
-                while (start + i < line.length() && !ops.contains(line.charAt(start + i)))
+                while (start + i < line.length() && !PRECEDENCE.containsKey(line.charAt(start + i)))
                     i++;
                 output.add(line.substring(start,start + i));
-                System.out.println("Added " + line.substring(start,start + i));
+                System.out.println("Added1 " + line.substring(start,start + i));
                 start += i;
             }
             // No brackets in this iteration
-
         }
 
         // Push remainder operators onto the output queue
         while (!operators.isEmpty()) {
-            String item = operators.pop();
-            output.add(String.valueOf(item));
-            System.out.println("Added " + item);
+            String item = String.valueOf(operators.pop());
+            output.add(item);
+            System.out.println("Added 2" + item);
 
         }
 
@@ -99,29 +90,32 @@ public class Evaluator {
         return numbers.pop();
     }
 
-    public static boolean isOperator(String s) {
-        return PRECEDENCE.containsKey(s);
-    }
 
-    public static boolean isOperator(char c) {
-        return ops.contains(c);
+    private static boolean isOperator(String s) {
+        char c = s.charAt(0);
+        return PRECEDENCE.containsKey(c);
     }
 
     private static String operate(String op, String a, String b) throws NumberFormatException {
         String ans = null;
         double num;
-        if (op.equals("+")) {
-            num = Double.valueOf(a) + Double.valueOf(b);
-            ans = String.valueOf(num);
-        } else if (op.equals("-")) {
-            num = Double.valueOf(b) - Double.valueOf(a);
-            ans = String.valueOf(num);
-        } else if (op.equals("*")) {
-            num = Double.valueOf(a) * Double.valueOf(b);
-            ans = String.valueOf(num);
-        } else if (op.equals("/")) {
-            num = Double.valueOf(b) / Double.valueOf(a);
-            ans = String.valueOf(num);
+        switch (op) {
+            case "+":
+                num = Double.valueOf(a) + Double.valueOf(b);
+                ans = String.valueOf(num);
+                break;
+            case "-":
+                num = Double.valueOf(b) - Double.valueOf(a);
+                ans = String.valueOf(num);
+                break;
+            case "*":
+                num = Double.valueOf(a) * Double.valueOf(b);
+                ans = String.valueOf(num);
+                break;
+            case "/":
+                num = Double.valueOf(b) / Double.valueOf(a);
+                ans = String.valueOf(num);
+                break;
         }
         return ans;
     }

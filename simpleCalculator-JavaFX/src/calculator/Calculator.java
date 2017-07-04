@@ -24,8 +24,6 @@ public class Calculator extends Application {
         TabPane window = new TabPane();
         window.setPrefHeight(600);
         window.setPrefWidth(800);
-        Evaluator eval = new Evaluator();
-
 
         GridPane root = new GridPane();
         root.setHgap(1);
@@ -41,14 +39,11 @@ public class Calculator extends Application {
         tab2.setClosable(false);
         window.getTabs().addAll(tab1, tab2);
 
-        TextField txtfld = new TextField();
-        GridPane.setConstraints(txtfld,0,0,5,1);
-        txtfld.setEditable(false);
-        txtfld.setMouseTransparent(true);
-        txtfld.setFocusTraversable(false);
-
-
-
+        TextField textField = new TextField();
+        GridPane.setConstraints(textField,0,0,5,1);
+        textField.setEditable(false);
+        textField.setMouseTransparent(true);
+        textField.setFocusTraversable(false);
 
         Button btn;
         for (int i = 0; i < 10; i++) {
@@ -56,9 +51,7 @@ public class Calculator extends Application {
             btn.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    System.out.println(((Button) event.getSource()).getText());
-//                    String txt = ((Button) event.getSource()).getText();
-                    txtfld.setText(txtfld.getText() + ((Button) event.getSource()).getText());
+                    textField.setText(textProtocol(textField.getText(), ((Button) event.getSource()).getText()));
                 }
             });
             root.getChildren().add(btn);
@@ -72,14 +65,7 @@ public class Calculator extends Application {
         plus.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                String txt = txtfld.getText();
-                if (txt.length() > 0) {
-                    if (isLastCharOp(txt)) {
-                        txtfld.setText(txt.substring(0, txt.length()-1) + "+");
-                    } else {
-                        txtfld.setText(txt + "+");
-                    }
-                }
+                textField.setText(textProtocol(textField.getText(), ((Button) event.getSource()).getText()));
             }
         });
         GridPane.setConstraints(plus, 3, 4);
@@ -90,14 +76,7 @@ public class Calculator extends Application {
         minus.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                String txt = txtfld.getText();
-                if (txt.length() > 0) {
-                    if (isLastCharOp(txt)) {
-                        txtfld.setText(txt.substring(0, txt.length()-1) + "-");
-                    } else {
-                        txtfld.setText(txt + "-");
-                    }
-                }
+                textField.setText(textProtocol(textField.getText(), ((Button) event.getSource()).getText()));
             }
         });
         GridPane.setConstraints(minus, 3, 3);
@@ -108,14 +87,7 @@ public class Calculator extends Application {
         times.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                String txt = txtfld.getText();
-                if (txt.length() > 0) {
-                    if (isLastCharOp(txt)) {
-                        txtfld.setText(txt.substring(0, txt.length()-1) + "*");
-                    } else {
-                        txtfld.setText(txt + "*");
-                    }
-                }
+                textField.setText(textProtocol(textField.getText(), ((Button) event.getSource()).getText()));
             }
         });
         GridPane.setConstraints(times, 3, 2);
@@ -126,14 +98,7 @@ public class Calculator extends Application {
         divide.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                String txt = txtfld.getText();
-                if (txt.length() > 0) {
-                    if (isLastCharOp(txt)) {
-                        txtfld.setText(txt.substring(0, txt.length()-1) + "/");
-                    } else {
-                        txtfld.setText(txt + "/");
-                    }
-                }
+                textField.setText(textProtocol(textField.getText(), ((Button) event.getSource()).getText()));
             }
         });
         GridPane.setConstraints(divide, 3, 1);
@@ -144,7 +109,7 @@ public class Calculator extends Application {
         equals.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                txtfld.setText(eval.evaluate(txtfld.getText()));
+                textField.setText(Evaluator.evaluate(textField.getText()));
             }
         });
         GridPane.setConstraints(equals, 2, 4);
@@ -154,15 +119,7 @@ public class Calculator extends Application {
         dot.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                String txt = txtfld.getText();
-                if (txt.length() > 0) {
-
-                    if (!Character.isDigit(txt.charAt(txt.length()-1))) {
-                        txtfld.setText(txt.substring(0, txt.length()-1) + ".");
-                    } else {
-                        txtfld.setText(txt + ".");
-                    }
-                }
+                textField.setText(textProtocol(textField.getText(), ((Button) event.getSource()).getText()));
             }
         });
         GridPane.setConstraints(dot, 1, 4);
@@ -170,23 +127,24 @@ public class Calculator extends Application {
 
 
 
-        root.getChildren().addAll(txtfld, plus, equals, minus, times, divide, dot);
+        root.getChildren().addAll(textField, plus, equals, minus, times, divide, dot);
 
         Scene overarch = new Scene(window);
         overarch.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
+                // TODO change this to use textProtocol
                 if (event.getText().length() == 0)
                     return;
                 char key = event.getText().charAt(0);
                 if (Character.isDigit(key)) {
-                    txtfld.setText(txtfld.getText() + key);
-                } else if (key == '.' && txtfld.getLength() != 0) {
-                    String txt = txtfld.getText();
+                    textField.setText(textField.getText() + key);
+                } else if (key == '.' && textField.getLength() != 0) {
+                    String txt = textField.getText();
                     if (!Character.isDigit(txt.charAt(txt.length()-1))) {
-                        txtfld.setText(txt.substring(0, txt.length()-1) + ".");
+                        textField.setText(txt.substring(0, txt.length()-1) + ".");
                     } else {
-                        txtfld.setText(txt + ".");
+                        textField.setText(txt + ".");
                     }
                 } else { // operator
 
@@ -247,30 +205,26 @@ public class Calculator extends Application {
         return new Pair<>(x, y);
     }
 
-    private boolean isLastCharOp(String s) {
-        if (Evaluator.isOperator(s.substring(s.length() - 1, s.length()))) {
-            System.out.println("True");
-            return true;
-        }
-        System.out.println("False");
-        return false;
-    }
 
-    // TODO implement this into the code
     private String textProtocol(String s, String btn) {
         // Checks if there is a letter (i.e. error)
-        if (Character.isAlphabetic(btn.charAt(0)))
+        if (s.length() != 0 && Character.isAlphabetic(s.charAt(0)))
             s = "";
 
         // Regular checks
         if (Character.isDigit(btn.charAt(0))) {
             return s + btn;
-        } else {
-            // dot or operator
-            if (s.length() != 0 && !Character.isDigit(s.charAt(s.length()-1)))
+        } else { // dot or operator
+            // Check for empty string
+            if (s.length() == 0)
+                return s;
+
+            // Check for previous character
+            if (Character.isDigit(s.charAt(s.length()-1)))
                 return s + btn;
+            else
+                return s.substring(0, s.length()-1) + btn;
         }
-        return s;
     }
 
 
