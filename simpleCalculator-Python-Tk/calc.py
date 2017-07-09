@@ -1,3 +1,9 @@
-import tkinter as tk
+import model
+import view
+import controller
 
-root = tk.Frame()
+if __name__ == '__main__':
+    model = model.Model()
+    view = view.View()
+    c = controller.Controller()
+    c.run()
